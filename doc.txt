@@ -1,0 +1,61 @@
+����� ���� ���� customer_user
+create table customer_user(
+Code int not null primary key,
+Name varchar(15) not null,
+Lname varchar(15) not null,
+email varchar(30) not null,
+address varchar(30) not null,
+password varchar(60)not null,
+register_date date not null);
+
+������� ����� ���� ���� ����
+alter table customer_user add constraint check_email check(email like '%_@%__.%__')
+
+����� ���� ���� source
+-- create table source(
+-- source_id int  not null primary key,
+-- ram int not null check(0 < ram and ram < 32),
+-- num_core int not null check(1 < num_core and num_core< 8),
+-- source_storage int not null check( 0 < source_storage),
+-- cpu int not null check(cpu > 0),
+-- net_rate int not null check(net_rate>0),
+-- daily_price int not null
+-- );
+
+
+
+
+-- create table wallet (
+-- w_id bigint not null primary key,
+-- u_id bigint not null,
+-- amount bigint not null,
+-- foreign key (u_id) references public.user (u_id)
+-- )
+
+-- create table ssh (
+-- source_id bigint not null,
+-- u_id bigint not null,
+-- ssh_value bigint not null,
+-- ssh_name varchar(30) not null,
+-- foreign key (u_id) references public.user (u_id),
+-- foreign key (source_id) references public.source (source_id),
+-- primary key(source_id,u_id,ssh_value)
+-- )
+
+-- alter table public.source add cpu_freq float
+
+-- alter table public.source add bandwidth int 
+
+-- create trigger daily_price_validator after insert or update
+-- on public.source
+-- referencing new row as new_tuple
+-- for each statement
+-- when(( (new_tuple.num_core*new_tuple.cou_freq*5000)
+-- 	 +(new_tuple.ram*4000+new_tuple.source_storage*2000)+
+-- 	 (new_tuple.bandwidth*1000) ) !=  (new_tuple.daily_price))
+-- delete from public.source where public.source_id = new_tuple.source_id
+
+
+
+
+
