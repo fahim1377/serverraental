@@ -34,13 +34,13 @@ def read(table, **kwargs):
     sql = list()
     sql.append("SELECT * FROM %s " % table)
     if kwargs:
-        sql.append("WHERE " + " AND ".join("%s = '%s'" % (k, v) for k, v in kwargs.iteritems()))
+        sql.append("WHERE " + " AND ".join("%s = '%s'" % (k, v) for k, v in kwargs.items()))
     sql.append(";")
     return "".join(sql)
 
 
 
-def upsert(table, **kwargs):
+def upsert(table,key, **kwargs):
     """ update/insert rows into objects table (update if the row already exists)
         given the key-value pairs in kwargs """
     keys = ["%s" % k for k in kwargs]
@@ -50,8 +50,8 @@ def upsert(table, **kwargs):
     sql.append(", ".join(keys))
     sql.append(") VALUES (")
     sql.append(", ".join(values))
-    sql.append(") ON DUPLICATE KEY UPDATE ")
-    sql.append(", ".join("%s = '%s'" % (k, v) for k, v in kwargs.iteritems()))
+    sql.append(") ON CONFLICT (%s) DO UPDATE SET "%(key))
+    sql.append(", ".join("%s = '%s'" % (k, v) for k, v in kwargs.items()))
     sql.append(";")
     return "".join(sql)
 
@@ -60,7 +60,7 @@ def delete(table, **kwargs):
     """ deletes rows from table where **kwargs match """
     sql = list()
     sql.append("DELETE FROM %s " % table)
-    sql.append("WHERE " + " AND ".join("%s = '%s'" % (k, v) for k, v in kwargs.iteritems()))
+    sql.append("WHERE " + " AND ".join("%s = '%s'" % (k, v) for k, v in kwargs.items()))
     sql.append(";")
     return "".join(sql)
 
@@ -71,6 +71,11 @@ if __name__ == "__main__":
     connect_database()
     #get_all_recources()
     # insert_recource('12','2','4','234234','3','4','2435234')
-    temp = ['12','2','4','234234','3','4','2435234']
-    upsert('source',temp)
-
+    # sql = upsert('source','source_id',source_id = 21,
+    # ram = 2,num_core = 4,source_storage = 23423,daily_price= 234,cpu_freq = 23,bandwidth = 3)
+    sql = delete('source',**{'source_id' : '12'})
+    Cursor.execute(sql)
+    # result = Cursor.fetchall()
+    Connection.commit()
+    # print(result)
+    
