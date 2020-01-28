@@ -78,14 +78,37 @@ def delete(table, **kwargs):
     return "".join(sql)
 
 
-def register_user(table,key, **kwargs):
+def register_user(**kwargs):
     try:
-        sql = insert(table,key,**kwargs)
+        sql = insert('public.user','u_id',**kwargs)
         Cursor.execute(sql)
     except :
         return "EorU_exists" 
     Connection.commit()
     return "succ"
+
+
+def login_user(**kwargs):
+    if ('username' in kwargs.keys() and 'passw' in kwargs.keys()):
+        try:
+            sql = read('user',**kwargs)
+            Cursor.execute(sql)
+            result = Cursor.fetchall()
+            return result
+        except :
+            print("not match")
+
+def add_source(**kwargs):
+    try:
+        sql = insert('source','source_id',**kwargs)
+        Cursor.execute(sql)
+    except :
+        return "somethin is wrong" 
+    Connection.commit()
+    return "succ"
+    
+        
+
 
 
 if __name__ == "__main__":
@@ -97,14 +120,13 @@ if __name__ == "__main__":
     # sql = delete('source',**{'source_id' : '12'})
 
     
-    result = register_user('public.user','u_id',u_id=15,national_code = 1234234,passw = 'ssdf',email = 'fahim',register_date = '2019-03-02',username = 'fafhim')
-    if result=="EorU_exists":
-        print(result)
-    else:
-        print(result)
+    # result = register_user('public.user','u_id',u_id=15,national_code = 1234234,passw = 'ssdf',email = 'fahim',register_date = '2019-03-02',username = 'fafhim')
+    # if result=="EorU_exists":
+    #     print(result)
+    # else:
+    #     print(result)
     
-    # result = Cursor.fetchall()
-
-    # print(result)
+    result = login_user('public.user',**{'username':'fafhim','passw':'sdf'})
+    print(result)
     
     
