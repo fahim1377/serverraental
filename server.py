@@ -80,9 +80,12 @@ def delete(table, **kwargs):
 
 def register_user(table,key, **kwargs):
     try:
-        insert(table,key,**kwargs)
-    except UniqueViolation:
+        sql = insert(table,key,**kwargs)
+        Cursor.execute(sql)
+    except :
         return "EorU_exists" 
+    Connection.commit()
+    return "succ"
 
 
 if __name__ == "__main__":
@@ -93,11 +96,15 @@ if __name__ == "__main__":
     # ram = 2,num_core = 4,source_storage = 23423,daily_price= 234,cpu_freq = 23,bandwidth = 3)
     # sql = delete('source',**{'source_id' : '12'})
 
-    sql = register_user('public.user','u_id',u_id=15,national_code = 1234234,passw = 'ssdf',email = 'fahim',register_date = '2019-03-02',username = 'fafhim')
-    print(sql)
-    Cursor.execute(sql)
+    
+    result = register_user('public.user','u_id',u_id=15,national_code = 1234234,passw = 'ssdf',email = 'fahim',register_date = '2019-03-02',username = 'fafhim')
+    if result=="EorU_exists":
+        print(result)
+    else:
+        print(result)
+    
     # result = Cursor.fetchall()
-    Connection.commit()
+
     # print(result)
     
     
