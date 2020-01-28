@@ -55,6 +55,19 @@ def upsert(table,key, **kwargs):
     sql.append(";")
     return "".join(sql)
 
+def insert(table,key, **kwargs):
+    """ update/insert rows into objects table (update if the row already exists)
+        given the key-value pairs in kwargs """
+    keys = ["%s" % k for k in kwargs]
+    values = ["'%s'" % v for v in kwargs.values()]
+    sql = list()
+    sql.append("INSERT INTO %s (" % table)
+    sql.append(", ".join(keys))
+    sql.append(") VALUES (")
+    sql.append(", ".join(values))
+    sql.append(");")
+    return "".join(sql)
+
 
 def delete(table, **kwargs):
     """ deletes rows from table where **kwargs match """
@@ -65,6 +78,11 @@ def delete(table, **kwargs):
     return "".join(sql)
 
 
+def register_user(table,key, **kwargs):
+    try:
+        insert(table,key,**kwargs)
+    except UniqueViolation:
+        return "EorU_exists" 
 
 
 if __name__ == "__main__":
@@ -73,9 +91,13 @@ if __name__ == "__main__":
     # insert_recource('12','2','4','234234','3','4','2435234')
     # sql = upsert('source','source_id',source_id = 21,
     # ram = 2,num_core = 4,source_storage = 23423,daily_price= 234,cpu_freq = 23,bandwidth = 3)
-    sql = delete('source',**{'source_id' : '12'})
+    # sql = delete('source',**{'source_id' : '12'})
+
+    sql = register_user('public.user','u_id',u_id=15,national_code = 1234234,passw = 'ssdf',email = 'fahim',register_date = '2019-03-02',username = 'fafhim')
+    print(sql)
     Cursor.execute(sql)
     # result = Cursor.fetchall()
     Connection.commit()
     # print(result)
+    
     

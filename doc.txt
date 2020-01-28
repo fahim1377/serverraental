@@ -57,5 +57,10 @@ alter table customer_user add constraint check_email check(email like '%_@%__.%_
 
 
 
-
+CREATE TRIGGER chk_email_uniqe_regster
+    AFTER INSERT OR UPDATE OF email
+    ON public."user"
+    FOR EACH ROW
+    WHEN (new.u_id in (select email from public.user))
+    EXECUTE PROCEDURE public."check_email_Exists"();
 
