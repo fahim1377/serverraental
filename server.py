@@ -100,15 +100,41 @@ def login_user(**kwargs):
 
 def add_source(**kwargs):
     try:
-        sql = insert('source','source_id',**kwargs)
+        sql = upsert('source','source_id',**kwargs)
         Cursor.execute(sql)
     except :
         return "somethin is wrong" 
     Connection.commit()
     return "succ"
-    
-        
 
+      
+def delete_source(**kwargs):
+    if 'source_id' in kwargs.keys():
+        try:
+            sql = delete('source',**kwargs)
+            Cursor.execute(sql)
+            Cursor.commit()
+            return "succ"
+        except :
+            print("not match")
+    else:
+        return "not given source_id"
+
+def charge_wallet(**kwargs):
+    if 'w_id' in kwargs.keys() and 'amount' in kwargs.keys() and 'u_id' in kwargs.keys():
+        try:
+            sql = read('wallet',**{'w_id':kwargs['w_id']})
+            Cursor.execute(sql)
+            result = Cursor.fetchall()
+            kwargs['amount'] = result[0][2] + kwargs['amount']  
+            sql = upsert('wallet','w_id',**kwargs)
+            Cursor.execute(sql)
+        except :
+            return "somethin is wrong" 
+        Connection.commit()
+        return "succ"
+    else:
+        print("hi")
 
 
 if __name__ == "__main__":
@@ -126,7 +152,9 @@ if __name__ == "__main__":
     # else:
     #     print(result)
     
-    result = login_user('public.user',**{'username':'fafhim','passw':'sdf'})
-    print(result)
+    # result = login_user('public.user',**{'username':'fafhim','passw':'sdf'})
+    # print(result)
     
+    # delete_source()
+    print(charge_wallet(**{'w_id':'12','amount':3000,'u_id':'15'}))
     
